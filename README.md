@@ -11,6 +11,7 @@ Redis의 원자적 선착순 발급과 Kafka 기반 비동기 영속화, DLT 보
 ## 문서
 
 - [하네스 구현 명세](HARNESS_SPEC.md)
+- [현재 프로젝트 구조](PROJECT_STRUCTURE.md)
 - [시스템 아키텍처](ARCHITECTURE.md)
 - [설계 문서 색인](docs/design-docs/index.md)
 - [제품 명세 색인](docs/product-specs/index.md)
