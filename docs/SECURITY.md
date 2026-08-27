@@ -8,3 +8,4 @@
 ## 2. 데이터 유효성 검증
 
 - 모든 API 요청은 Spring Boot Validation(`@Valid`, `@NotNull`, `@Positive`)을 통해 이상 파라미터를 1차 차단.
+- 쿠폰 발급 요청의 `userId`와 경로의 `couponId`는 유효성 검증을 통과한 뒤에만 Redis Lua Script에 전달한다.
