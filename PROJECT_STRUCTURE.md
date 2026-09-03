@@ -25,6 +25,8 @@ coupon-system/
 │       ├── html/
 │       │   └── index.html
 │       └── nginx.conf
+├── harness/
+│   └── load-test-plan.md
 └── docs/
     ├── DESIGN.md
     ├── FRONTEND.md
@@ -58,6 +60,8 @@ coupon-system/
         └── java/
             └── com/couponissue/coupon/
                 ├── CouponRedisRepositoryConcurrencyTest.java
+                ├── CouponConsumerIntegrationTest.java
+                ├── KafkaFalloutIntegrationTest.java
                 └── RedisTestEnvironment.java
 ```
 
