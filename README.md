@@ -6,7 +6,8 @@ Redis의 원자적 선착순 발급과 Kafka 기반 비동기 영속화, DLT 보
 
 - Redis Lua Script: 재고 차감과 사용자 중복 발급 방지
 - Kafka: 발급 이벤트 비동기 전달 및 MySQL 영속화
-- DLT: 최종 영속화 실패 시 Redis 재고와 사용자 발급 이력 복구
+- 최종 결과: 최대 5초 대기 후 `SUCCESS` 또는 `FAILED`를 반환하고, 지연 시 `PENDING` 상태 조회로 전환
+- DLT: 최종 영속화 실패 시 Redis 재고와 사용자 발급 이력을 복구하고 감사 로그를 보존
 
 ## 문서
 
