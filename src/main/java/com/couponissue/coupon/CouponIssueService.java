@@ -39,4 +39,9 @@ public class CouponIssueService {
         String status = redisRepository.getIssueStatus(couponId, userId);
         return status == null ? "NOT_FOUND" : status;
     }
+
+    public long stock(long couponId) {
+        // 재고는 MySQL이 아니라 Redis에서 관리하므로 Repository에 위임합니다.
+        return redisRepository.getStock(couponId);
+    }
 }
