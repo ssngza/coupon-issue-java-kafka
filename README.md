@@ -28,4 +28,12 @@ docker compose -f docker/docker-compose.yml up -d
 
 기본 스택은 Nginx, App, Redis, Kafka, MySQL로 구성됩니다. `APP_IMAGE`는 애플리케이션 빌드가 완료된 뒤 사용합니다.
 
+## 개발 실행
+
+```bash
+./gradlew test
+```
+
+현재 단계에서는 Redis 원자 발급 로직과 동시성 검증 테스트가 포함되어 있습니다.
+
 상세 기술 스택, 핵심 불변 규칙, 단계별 구현·테스트 기준, API 및 DDL은 [HARNESS_SPEC.md](HARNESS_SPEC.md)를 기준으로 합니다.
