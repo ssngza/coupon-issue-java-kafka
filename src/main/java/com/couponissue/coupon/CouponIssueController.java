@@ -16,6 +16,13 @@ public class CouponIssueController {
         return ResponseEntity.ok(Map.of("stock", service.stock(couponId)));
     }
 
+    @PutMapping("/{couponId}/stock")
+    public ResponseEntity<Map<String, Long>> seedStock(@PathVariable long couponId, @RequestBody StockRequest request) {
+        // 운영에서는 관리자 인증을 붙여야 하며, 현재 엔드포인트는 로컬 테스트 설정 전용입니다.
+        service.seedStock(couponId, request.stock());
+        return ResponseEntity.ok(Map.of("stock", service.stock(couponId)));
+    }
+
     @PostMapping("/{couponId}/issue")
     public ResponseEntity<Map<String, String>> issue(@PathVariable long couponId, @RequestBody IssueRequest request) {
         return ResponseEntity.ok(Map.of("status", service.issue(couponId, request.userId())));
@@ -27,4 +34,5 @@ public class CouponIssueController {
     }
 
     public record IssueRequest(long userId) { }
+    public record StockRequest(long stock) { }
 }
