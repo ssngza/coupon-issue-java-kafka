@@ -44,6 +44,11 @@ public class CouponRedisRepository {
         return redisTemplate.opsForValue().get(issueStatusKey(couponId, userId));
     }
 
+    public void markSuccess(long couponId, long userId) {
+        // Consumer가 DB 저장을 완료한 시점에만 PENDING을 SUCCESS로 전환합니다.
+        redisTemplate.opsForValue().set(issueStatusKey(couponId, userId), "SUCCESS", PENDING_TTL);
+    }
+
     public CouponIssueOutcome issueCoupon(long couponId, long userId) {
         Long result = redisTemplate.execute(
                 issueCouponScript,

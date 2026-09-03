@@ -34,6 +34,6 @@ docker compose -f docker/docker-compose.yml up -d
 ./gradlew test
 ```
 
-현재 단계에서는 Redis 원자 발급 로직과 동시성 검증 테스트가 포함되어 있습니다.
+현재 단계에서는 Redis 원자 발급, Kafka 비동기 영속화, 최종 상태 조회, 동시성 검증 테스트가 포함되어 있습니다.
 
 상세 기술 스택, 핵심 불변 규칙, 단계별 구현·테스트 기준, API 및 DDL은 [HARNESS_SPEC.md](HARNESS_SPEC.md)를 기준으로 합니다.

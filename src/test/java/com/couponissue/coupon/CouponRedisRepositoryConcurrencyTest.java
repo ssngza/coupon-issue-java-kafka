@@ -33,6 +33,11 @@ class CouponRedisRepositoryConcurrencyTest {
     static void registerRedisProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.redis.host", REDIS::host);
         registry.add("spring.data.redis.port", REDIS::port);
+        // Redis 단위 테스트에서는 Kafka Consumer를 띄우지 않아 외부 브로커 의존성을 제거합니다.
+        registry.add("spring.kafka.listener.auto-startup", () -> "false");
+        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:redis-test;MODE=MySQL;DB_CLOSE_DELAY=-1");
+        registry.add("spring.datasource.driver-class-name", () -> "org.h2.Driver");
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
 
     @Autowired
