@@ -15,3 +15,9 @@
 - 영속화 실패 시 최초 처리 1회와 재시도 1회 뒤 `coupon.issue.dlt`로 라우팅되는지 확인
 - Kafka 발행 실패 시 Redis 보상과 `FAILED` 상태 기록을 확인
 - 최종 상태가 5초 내 결정되지 않으면 `PENDING`을 반환하고 상태 조회 API가 최종 결과를 제공하는지 확인
+
+## 이슈 6 검증 자산
+
+- `CouponConsumerIntegrationTest`: 이벤트 소비 후 `coupon_history` 저장과 Redis `SUCCESS` 상태를 검증한다.
+- `KafkaFalloutIntegrationTest`: DLT 보상 후 Redis 재고, 사용자 Set, `FAILED` 상태를 검증한다.
+- `harness/load-test-plan.md`: 1,000건 동시 발급, 정합성, p95/p99 관찰 기준을 정의한다.
