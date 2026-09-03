@@ -12,3 +12,6 @@
 - `./gradlew test` 전체 통과
 - 재고 100개 기준 1,000건 동시 요청 시 정확히 100건만 성공하고 초과 발급(Over-issue) 0건 확인
 - DLT 최종 실패 후 Redis 재고 `INCR` 및 발급 사용자 Set `SREM` 복구 확인
+- 영속화 실패 시 최초 처리 1회와 재시도 1회 뒤 `coupon.issue.dlt`로 라우팅되는지 확인
+- Kafka 발행 실패 시 Redis 보상과 `FAILED` 상태 기록을 확인
+- 최종 상태가 5초 내 결정되지 않으면 `PENDING`을 반환하고 상태 조회 API가 최종 결과를 제공하는지 확인

@@ -8,6 +8,7 @@
 ## 2. API Contract
 
 - `GET /api/coupons/{couponId}/stock` -> `{ "stock": 42 }`
-- `POST /api/coupons/{couponId}/issue` -> Body: `{ "userId": 1001 }` -> Response: `{ "success": true, "message": "발급 완료" }`
+- `POST /api/coupons/{couponId}/issue` -> Body: `{ "userId": 1001 }` -> 최대 5초 대기 후 `SUCCESS`, `FAILED`, 또는 `PENDING` 응답
+- `GET /api/coupons/{couponId}/issues/{userId}/status` -> `{ "status": "PENDING" | "SUCCESS" | "FAILED", "message": "..." }`
 
-발급 성공 응답은 Redis 원자 검증 성공을 의미한다. Kafka Consumer의 MySQL 영속화와 DLT 보상은 응답 이후 비동기로 처리한다.
+`SUCCESS`는 MySQL 영속화까지 완료된 최종 발급 성공을 의미한다. `FAILED`는 Kafka 발행 또는 DLT 최종 실패 뒤 Redis 재고·발급 이력이 보상된 상태를 의미한다. `PENDING`이면 UI는 상태 조회 API를 폴링해 최종 결과만 성공 또는 실패로 표시한다.
