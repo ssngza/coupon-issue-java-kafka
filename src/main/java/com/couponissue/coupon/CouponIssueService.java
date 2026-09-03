@@ -44,4 +44,12 @@ public class CouponIssueService {
         // 재고는 MySQL이 아니라 Redis에서 관리하므로 Repository에 위임합니다.
         return redisRepository.getStock(couponId);
     }
+
+    public void seedStock(long couponId, long stock) {
+        if (stock < 0) {
+            throw new IllegalArgumentException("stock must not be negative");
+        }
+        // 현재는 로컬 테스트용 설정 기능이므로 Redis 재고를 초기화합니다.
+        redisRepository.seedStock(couponId, stock);
+    }
 }
