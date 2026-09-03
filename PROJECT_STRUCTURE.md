@@ -5,9 +5,11 @@
 ```text
 coupon-system/
 ├── .gitignore
+├── .dockerignore
 ├── AGENTS.md
 ├── ARCHITECTURE.md
 ├── build.gradle
+├── Dockerfile
 ├── HARNESS_SPEC.md
 ├── gradle/
 │   └── wrapper/
@@ -65,4 +67,4 @@ coupon-system/
                 └── RedisTestEnvironment.java
 ```
 
-`harness/`와 `.github/workflows/`는 구현 계획에 포함되어 있지만 아직 생성되지 않았습니다.
+`.github/workflows/`는 향후 CI 자동화 작업에서 추가할 예정입니다.
