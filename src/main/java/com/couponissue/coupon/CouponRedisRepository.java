@@ -17,12 +17,16 @@ public class CouponRedisRepository {
 
     private final StringRedisTemplate redisTemplate;
     private final DefaultRedisScript<Long> issueCouponScript;
+    private final DefaultRedisScript<Long> compensateCouponScript;
 
     public CouponRedisRepository(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.issueCouponScript = new DefaultRedisScript<>();
         this.issueCouponScript.setLocation(new ClassPathResource("scripts/issue_coupon.lua"));
         this.issueCouponScript.setResultType(Long.class);
+        this.compensateCouponScript = new DefaultRedisScript<>();
+        this.compensateCouponScript.setLocation(new ClassPathResource("scripts/compensate_coupon.lua"));
+        this.compensateCouponScript.setResultType(Long.class);
     }
 
     public void seedStock(long couponId, long stock) {
@@ -47,6 +51,16 @@ public class CouponRedisRepository {
     public void markSuccess(long couponId, long userId) {
         // Consumer가 DB 저장을 완료한 시점에만 PENDING을 SUCCESS로 전환합니다.
         redisTemplate.opsForValue().set(issueStatusKey(couponId, userId), "SUCCESS", PENDING_TTL);
+    }
+
+    public void compensateFailure(long couponId, long userId) {
+        // 중복 DLT 전달에도 이미 제거된 사용자만 재고를 복구해 이중 보상을 막습니다.
+        redisTemplate.execute(
+                compensateCouponScript,
+                List.of(stockKey(couponId), usersKey(couponId), issueStatusKey(couponId, userId)),
+                Long.toString(userId),
+                Long.toString(PENDING_TTL.toSeconds())
+        );
     }
 
     public CouponIssueOutcome issueCoupon(long couponId, long userId) {

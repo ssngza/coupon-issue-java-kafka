@@ -21,6 +21,8 @@ public class CouponIssueService {
         try {
             producer.publish(new CouponIssueEvent(couponId, userId, Instant.now())).join();
         } catch (RuntimeException exception) {
+            // Kafka에 전달되지 않은 발급은 즉시 Redis 원상 복구합니다.
+            redisRepository.compensateFailure(couponId, userId);
             return "FAILED";
         }
         // Consumer가 빠르게 처리하면 최종 결과를 반환하고, 아니면 PENDING으로 전환합니다.
