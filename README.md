@@ -26,7 +26,7 @@ Redis의 원자적 선착순 발급과 Kafka 기반 비동기 영속화, DLT 보
 docker compose -f docker/docker-compose.yml up -d
 ```
 
-기본 스택은 Nginx, App, Redis, Kafka, MySQL로 구성됩니다. `APP_IMAGE`는 애플리케이션 빌드가 완료된 뒤 사용합니다.
+기본 스택은 Nginx, App, Redis, Kafka, MySQL로 구성되며 Nginx는 호스트 `8081` 포트를 사용합니다. `NGINX_HTTP_PORT`로 변경할 수 있고, `APP_IMAGE`는 애플리케이션 빌드가 완료된 뒤 사용합니다.
 
 ## 개발 실행
 

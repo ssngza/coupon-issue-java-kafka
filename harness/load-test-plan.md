@@ -4,7 +4,7 @@
 
 1. `docker compose -f docker/docker-compose.yml up -d`로 Redis, Kafka, MySQL을 기동한다.
 2. 애플리케이션을 빌드하고 `APP_IMAGE`로 지정해 Compose 앱을 실행한다.
-3. `python harness/scripts/test_concurrency.py --coupon-id 1 --users 1000`으로 쿠폰 ID 하나에 1,000명의 발급 요청을 동시에 전송한다.
+3. `python harness/scripts/test_concurrency.py --base-url http://localhost:8081 --coupon-id 1 --users 1000`으로 쿠폰 ID 하나에 1,000명의 발급 요청을 동시에 전송한다.
 4. 실행 후 `./gradlew test`로 회귀 테스트를 수행한다.
 
 ## 합격 기준
