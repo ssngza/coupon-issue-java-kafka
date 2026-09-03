@@ -18,4 +18,14 @@ Redis의 원자적 선착순 발급과 Kafka 기반 비동기 영속화, DLT 보
 - **제품 명세**: 테스트 클라이언트의 재고 조회, 발급 요청, 동시성 시뮬레이션 요구사항을 제공합니다. [제품 명세 색인](docs/product-specs/index.md)
 - **구현 로드맵**: Redis, Kafka, DLT, 부하 테스트의 마일스톤을 추적합니다. [상세 보기](docs/PLANS.md)
 
+## 로컬 기동
+
+`docker/.env.example`를 `docker/.env`로 복사한 뒤 아래 명령으로 인프라와 프록시를 실행합니다.
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
+```
+
+기본 스택은 Nginx, App, Redis, Kafka, MySQL로 구성됩니다. `APP_IMAGE`는 애플리케이션 빌드가 완료된 뒤 사용합니다.
+
 상세 기술 스택, 핵심 불변 규칙, 단계별 구현·테스트 기준, API 및 DDL은 [HARNESS_SPEC.md](HARNESS_SPEC.md)를 기준으로 합니다.

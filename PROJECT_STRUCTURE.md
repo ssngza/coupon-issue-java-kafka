@@ -10,6 +10,7 @@ coupon-system/
 ├── PROJECT_STRUCTURE.md
 ├── README.md
 ├── docker/
+│   ├── .env.example
 │   ├── docker-compose.yml
 │   └── nginx/
 │       ├── html/
