@@ -29,6 +29,9 @@ coupon-system/
 │       └── nginx.conf
 ├── harness/
 │   └── load-test-plan.md
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 └── docs/
     ├── DESIGN.md
     ├── FRONTEND.md
@@ -67,4 +70,4 @@ coupon-system/
                 └── RedisTestEnvironment.java
 ```
 
-`.github/workflows/`는 향후 CI 자동화 작업에서 추가할 예정입니다.
+`.github/workflows/ci.yml`은 push와 pull request마다 Gradle 테스트 및 Docker Compose 설정 검증을 실행합니다.
