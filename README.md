@@ -28,6 +28,8 @@ docker compose -f docker/docker-compose.yml up -d
 
 기본 스택은 Nginx, App, Redis, Kafka, MySQL로 구성되며 Nginx는 호스트 `8081` 포트를 사용합니다. `NGINX_HTTP_PORT`로 변경할 수 있고, `APP_IMAGE`는 애플리케이션 빌드가 완료된 뒤 사용합니다.
 
+재고 설정 화면을 사용하려면 `docker/.env`에 `COUPON_ADMIN_TOKEN`을 설정하고 같은 값을 화면의 관리자 토큰 입력란에 입력합니다.
+
 ## 개발 실행
 
 ```bash

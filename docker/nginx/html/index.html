@@ -26,6 +26,7 @@
     <h3>쿠폰 발급 설정</h3>
     <p>로컬 테스트용으로 쿠폰 ID 1의 Redis 재고를 초기화합니다.</p>
     <div class="setup-row">
+      <label>관리자 토큰: <input type="password" id="adminToken" placeholder="COUPON_ADMIN_TOKEN"></label>
       <label>재고 수량: <input type="number" id="stockInput" value="100" min="0" style="width: 80px;"></label>
       <button class="btn" onclick="configureStock()">재고 설정</button>
     </div>
@@ -97,16 +98,21 @@
 
     async function configureStock() {
       const stock = Number(document.getElementById('stockInput').value);
+      const adminToken = document.getElementById('adminToken').value.trim();
       if (!Number.isInteger(stock) || stock < 0) {
         addLog('[안내] 재고는 0 이상의 정수로 입력하세요.');
         return;
       }
       const res = await fetch(`${API_BASE}/1/stock`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
         body: JSON.stringify({ stock })
       });
       const result = await res.json();
+      if (!res.ok) {
+        addLog(`[인증 실패] ${result.error || '관리자 토큰을 확인하세요.'}`);
+        return;
+      }
       addLog(`[설정] 쿠폰 1 재고를 ${result.stock}개로 설정했습니다.`);
       fetchStock();
     }

@@ -10,5 +10,6 @@
 - `GET /api/coupons/{couponId}/stock` -> `{ "stock": 42 }`
 - `POST /api/coupons/{couponId}/issue` -> Body: `{ "userId": 1001 }` -> 최대 5초 대기 후 `SUCCESS`, `FAILED`, 또는 `PENDING` 응답
 - `GET /api/coupons/{couponId}/issues/{userId}/status` -> `{ "status": "PENDING" | "SUCCESS" | "FAILED", "message": "..." }`
+- `PUT /api/coupons/{couponId}/stock` -> `X-Admin-Token` 헤더와 Body `{ "stock": 100 }` 필요
 
 `SUCCESS`는 MySQL 영속화까지 완료된 최종 발급 성공을 의미한다. `FAILED`는 Kafka 발행 또는 DLT 최종 실패 뒤 Redis 재고·발급 이력이 보상된 상태를 의미한다. `PENDING`이면 UI는 상태 조회 API를 폴링해 최종 결과만 성공 또는 실패로 표시한다.

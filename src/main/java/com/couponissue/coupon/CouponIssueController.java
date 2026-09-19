@@ -1,6 +1,7 @@
 package com.couponissue.coupon;
 
 import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +9,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/coupons")
 public class CouponIssueController {
     private final CouponIssueService service;
-    public CouponIssueController(CouponIssueService service) { this.service = service; }
+    private final AdminTokenValidator adminTokenValidator;
+
+    public CouponIssueController(CouponIssueService service, AdminTokenValidator adminTokenValidator) {
+        this.service = service;
+        this.adminTokenValidator = adminTokenValidator;
+    }
 
     @GetMapping("/{couponId}/stock")
     public ResponseEntity<Map<String, Long>> stock(@PathVariable long couponId) {
@@ -17,8 +23,16 @@ public class CouponIssueController {
     }
 
     @PutMapping("/{couponId}/stock")
-    public ResponseEntity<Map<String, Long>> seedStock(@PathVariable long couponId, @RequestBody StockRequest request) {
-        // 운영에서는 관리자 인증을 붙여야 하며, 현재 엔드포인트는 로컬 테스트 설정 전용입니다.
+    public ResponseEntity<?> seedStock(
+            @PathVariable long couponId,
+            @RequestBody StockRequest request,
+            @RequestHeader(value = "X-Admin-Token", required = false) String adminToken
+    ) {
+        if (!adminTokenValidator.isValid(adminToken)) {
+            // 재고 변경은 운영 데이터에 영향을 주므로 토큰이 없거나 틀리면 즉시 차단합니다.
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "유효한 관리자 인증 토큰이 필요합니다."));
+        }
         service.seedStock(couponId, request.stock());
         return ResponseEntity.ok(Map.of("stock", service.stock(couponId)));
     }
