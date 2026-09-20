@@ -17,6 +17,7 @@ Redis의 원자적 선착순 발급과 Kafka 기반 비동기 영속화, DLT 보
 - **설계 문서**: 불변 규칙, 구현 세부 전략, 데이터베이스 DDL을 제공합니다. [설계 문서 색인](docs/design-docs/index.md)
 - **제품 명세**: 테스트 클라이언트의 재고 조회, 발급 요청, 동시성 시뮬레이션 요구사항을 제공합니다. [제품 명세 색인](docs/product-specs/index.md)
 - **구현 로드맵**: Redis, Kafka, DLT, 부하 테스트의 마일스톤을 추적합니다. [상세 보기](docs/PLANS.md)
+- **단일 EC2 배포 Runbook**: 간이 배포, 업데이트, 백업, 복구 절차를 제공합니다. [상세 보기](docs/ops/single-ec2-deploy.md)
 
 ## 로컬 기동
 

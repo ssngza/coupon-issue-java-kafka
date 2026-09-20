@@ -49,8 +49,7 @@ services:
   kafka:
     image: apache/kafka:4.3.1
     hostname: kafka
-    ports:
-      - "9092:9092"
+    # Kafka는 App 컨테이너만 접근하므로 EC2 호스트 포트를 공개하지 않습니다.
     environment:
       - KAFKA_NODE_ID=1
       - KAFKA_PROCESS_ROLES=broker,controller
@@ -75,8 +74,7 @@ services:
       MYSQL_USER: ${MYSQL_USER:-coupon}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-coupon123!}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123!}
-    ports:
-      - "3306:3306"
+    # MySQL은 내부 네트워크와 named volume만 사용하며 외부 포트를 공개하지 않습니다.
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root123!}"]
       interval: 10s
