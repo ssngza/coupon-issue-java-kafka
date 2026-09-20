@@ -47,9 +47,12 @@ coupon-system/
     │   └── tech-debt-tracker.md
     ├── generated/
     │   └── db-schema.md
-    └── product-specs/
-        ├── index.md
-        └── new-user-onboarding.md
+    ├── product-specs/
+    │   ├── index.md
+    │   └── new-user-onboarding.md
+    └── ops/
+        ├── dlt-runbook.md
+        └── single-ec2-deploy.md
 └── src/
     ├── main/
     │   ├── java/
