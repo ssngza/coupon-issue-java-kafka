@@ -1,0 +1,79 @@
+name: Deploy to EC2 via SSM
+
+on:
+  workflow_dispatch:
+    inputs:
+      instance_id:
+        description: EC2 instance ID
+        required: true
+        type: string
+      aws_region:
+        description: AWS region
+        required: true
+        default: ap-northeast-2
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Deploy through SSM Run Command
+        env:
+          INSTANCE_ID: ${{ inputs.instance_id }}
+        run: |
+          set -euo pipefail
+          commands=$(cat <<'SCRIPT'
+          set -euo pipefail
+          APP_DIR=/opt/coupon-issue-java-kafka
+          REPO_URL=https://github.com/ssngza/coupon-issue-java-kafka.git
+          PARAMETER_PATH=/coupon/prod
+
+          if [ ! -d "$APP_DIR/.git" ]; then
+            git clone "$REPO_URL" "$APP_DIR"
+          else
+            git -C "$APP_DIR" fetch --prune origin
+            git -C "$APP_DIR" reset --hard origin/main
+          fi
+
+          umask 077
+          mkdir -p "$APP_DIR/docker"
+          {
+            for key in APP_IMAGE NGINX_HTTP_PORT MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD MYSQL_ROOT_PASSWORD COUPON_ADMIN_TOKEN; do
+              value=$(aws ssm get-parameter --name "$PARAMETER_PATH/$key" --with-decryption --query 'Parameter.Value' --output text)
+              printf '%s=%s\n' "$key" "$value"
+            done
+          } > "$APP_DIR/docker/.env"
+
+          cd "$APP_DIR"
+          docker compose --env-file docker/.env -f docker/docker-compose.yml config --quiet
+          docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --build
+          docker compose --env-file docker/.env -f docker/docker-compose.yml ps
+          SCRIPT
+          )
+
+          parameters=$(jq -Rn --arg commands "$commands" '{commands:[$commands]}')
+          command_id=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name AWS-RunShellScript \
+            --comment "Deploy coupon issue system" \
+            --parameters "$parameters" \
+            --query 'Command.CommandId' \
+            --output text)
+
+          aws ssm wait command-executed --command-id "$command_id" --instance-id "$INSTANCE_ID"
+          status=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$INSTANCE_ID" --query 'Status' --output text)
+          aws ssm get-command-invocation --command-id "$command_id" --instance-id "$INSTANCE_ID" --query 'StandardOutputContent' --output text
+          if [ "$status" != "Success" ]; then
+            aws ssm get-command-invocation --command-id "$command_id" --instance-id "$INSTANCE_ID" --query 'StandardErrorContent' --output text
+            exit 1
+          fi

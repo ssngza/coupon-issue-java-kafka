@@ -31,7 +31,10 @@ coupon-system/
 │   └── load-test-plan.md
 ├── .github/
 │   └── workflows/
-│       └── ci.yml
+│       ├── ci.yml
+│       └── deploy-ec2.yml
+├── deploy/
+│   └── ec2-user-data-amazon-linux.sh
 └── docs/
     ├── DESIGN.md
     ├── FRONTEND.md
