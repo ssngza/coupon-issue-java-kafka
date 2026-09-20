@@ -8,3 +8,9 @@
 4. **영속화 최종 실패**: DLT Consumer가 Redis 재고를 `INCR`, 사용자 발급 이력을 `SREM`, 상태를 `FAILED`로 기록하여 재고 유실을 방지. DLT 레코드와 구조화 로그에 실패 원인을 보존.
 5. **응답 대기 시간 초과**: 컨트롤러는 5초 이후 `PENDING`을 반환하고 상태 조회 API가 최종 결과를 제공.
 6. **EC2 OOM Killer 대응**: 2GB Swap Memory 활성화로 JVM/Kafka 메모리 스파이크 완충.
+
+## 2. 최소 운영 복구 절차
+
+- DLT 처리 결과는 `coupon_issue_dlt` 구조화 로그로 남긴다.
+- DLT 원본 확인, Redis-MySQL 정합성 점검, 단건 재처리 순서는 [DLT 운영 Runbook](ops/dlt-runbook.md)을 따른다.
+- 대시보드와 외부 알림은 현재 범위에 포함하지 않으며, 반복적인 보상 실패만 운영자가 로그로 확인하고 에스컬레이션한다.
