@@ -44,14 +44,14 @@ docker compose --env-file docker/.env -f docker/docker-compose.yml ps
 
 ```bash
 mkdir -p backups
-docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T mysql mysqldump -ucoupon -p"$MYSQL_PASSWORD" --single-transaction coupon_db > "backups/coupon_db-$(date +%Y%m%d-%H%M%S).sql"
+docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T mysql sh -c 'mysqldump -ucoupon -p"$MYSQL_PASSWORD" --single-transaction coupon_db' > "backups/coupon_db-$(date +%Y%m%d-%H%M%S).sql"
 ```
 
 복구 전에는 애플리케이션을 중지하고 백업 파일을 별도로 보존합니다.
 
 ```bash
 docker compose --env-file docker/.env -f docker/docker-compose.yml stop app nginx
-docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T mysql mysql -ucoupon -p"$MYSQL_PASSWORD" coupon_db < backups/backup.sql
+docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T mysql sh -c 'mysql -ucoupon -p"$MYSQL_PASSWORD" coupon_db' < backups/backup.sql
 docker compose --env-file docker/.env -f docker/docker-compose.yml start app nginx
 ```
 
